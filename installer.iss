@@ -1,4 +1,7 @@
-﻿[Setup]
+﻿#ifndef PortableDir
+#define PortableDir "build\portable"
+#endif
+[Setup]
 AppId={{D3CA4B46-48CA-4D9B-8A9A-72A0D72BF116}
 AppName=Texture Flow for VRChat
 AppVersion=0.2.0
@@ -14,7 +17,7 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 UninstallDisplayIcon={app}\TextureFlow.exe
 [Files]
-Source: "build\portable\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#PortableDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 [Icons]
 Name: "{group}\Texture Flow"; Filename: "{app}\TextureFlow.exe"
 Name: "{autodesktop}\Texture Flow"; Filename: "{app}\TextureFlow.exe"; Tasks: desktopicon

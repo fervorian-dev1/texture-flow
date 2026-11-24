@@ -694,6 +694,7 @@ tests/                       Desktop, Unity and live integration tests
 <li>Preserve stale-target, expected-material, session, expiry, Play-mode and restore-conflict checks.</li>
 <li>Keep source arrays unchanged and verify mask polarity/cutout alpha.</li>
 <li>Preserve the supplied icon and drag/browser functionality.</li>
+<li>Keep UnityPackage content external to the single-file EXE (<code>ExcludeFromSingleFile=true</code> plus publish-copy metadata). The connector reads that physical directory. Verify archive contents after publishing; an EXE that starts is not proof its companion files were shipped.</li>
 <li>Do not claim native-shader, Quest, AI or universal compatibility without implementation/testing.</li>
 <li>Do not publish personal avatar textures, caches, logs or credentials as source.</li>
 </ul>
@@ -706,7 +707,10 @@ dotnet run --project .\tests -c Release -- 'A:/VRChat Texture Flow/build/desktop
 .\tests\Run-LiveApply.ps1
 .\Build.ps1 -InnoCompiler 'A:/VRChat Texture Flow/tools/InnoSetup/ISCC.exe'
 </code></pre>
-<p>Rebuilding needs the .NET 9 SDK and Windows desktop support; running the release does not require an SDK. Without InnoCompiler, Build.ps1 produces the portable app/ZIP but does not compile the installer. Outputs and SHA256 checksums are under build/releases. Close the portable app before overwriting its executable.</p>
+<p>Rebuilding needs the .NET 9 SDK and Windows desktop support; running the release does not require an SDK. Without InnoCompiler, Build.ps1 produces the portable app/ZIP but does not compile the installer. Outputs and SHA256 checksums are under build/releases. Close the portable app before overwriting its executable. To build while leaving the normal portable folder alone, use a separate staging directory:</p>
+<pre><code class="language-powershell">.\Build.ps1 -PortableDirectory 'build/manual-release-stage' -InnoCompiler 'A:/VRChat Texture Flow/tools/InnoSetup/ISCC.exe'
+</code></pre>
+<p>The ZIP and installer then use that staging directory. Archive creation uses a temporary ZIP and replaces the finished download only after successful compression.</p>
 <p><strong>Use disposable test locations, never a personal avatar project.</strong> Tests create images/exports/companion files, open/create scenes and materials, and change test assignments. Unity scripts default to the installed 2022.3.22f1 editor path; pass <code>-UnityExe</code> if yours is elsewhere. Their current disposable project is build/unity-apply-test.</p>
 <p>Useful results:</p>
 <pre><code class="language-text">build/desktop-test/desktop-tests.txt

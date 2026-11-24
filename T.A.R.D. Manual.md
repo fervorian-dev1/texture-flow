@@ -530,6 +530,7 @@ JSON writes use temporary files/renames. A short replace/read race is possible, 
 - Preserve stale-target, expected-material, session, expiry, Play-mode and restore-conflict checks.
 - Keep source arrays unchanged and verify mask polarity/cutout alpha.
 - Preserve the supplied icon and drag/browser functionality.
+- Keep UnityPackage content external to the single-file EXE (`ExcludeFromSingleFile=true` plus publish-copy metadata). The connector reads that physical directory. Verify archive contents after publishing; an EXE that starts is not proof its companion files were shipped.
 - Do not claim native-shader, Quest, AI or universal compatibility without implementation/testing.
 - Do not publish personal avatar textures, caches, logs or credentials as source.
 
@@ -546,7 +547,13 @@ dotnet run --project .\tests -c Release -- 'A:/VRChat Texture Flow/build/desktop
 .\Build.ps1 -InnoCompiler 'A:/VRChat Texture Flow/tools/InnoSetup/ISCC.exe'
 ```
 
-Rebuilding needs the .NET 9 SDK and Windows desktop support; running the release does not require an SDK. Without InnoCompiler, Build.ps1 produces the portable app/ZIP but does not compile the installer. Outputs and SHA256 checksums are under build/releases. Close the portable app before overwriting its executable.
+Rebuilding needs the .NET 9 SDK and Windows desktop support; running the release does not require an SDK. Without InnoCompiler, Build.ps1 produces the portable app/ZIP but does not compile the installer. Outputs and SHA256 checksums are under build/releases. Close the portable app before overwriting its executable. To build while leaving the normal portable folder alone, use a separate staging directory:
+
+```powershell
+.\Build.ps1 -PortableDirectory 'build/manual-release-stage' -InnoCompiler 'A:/VRChat Texture Flow/tools/InnoSetup/ISCC.exe'
+```
+
+The ZIP and installer then use that staging directory. Archive creation uses a temporary ZIP and replaces the finished download only after successful compression.
 
 **Use disposable test locations, never a personal avatar project.** Tests create images/exports/companion files, open/create scenes and materials, and change test assignments. Unity scripts default to the installed 2022.3.22f1 editor path; pass `-UnityExe` if yours is elsewhere. Their current disposable project is build/unity-apply-test.
 
