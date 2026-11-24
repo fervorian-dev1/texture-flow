@@ -1,0 +1,7 @@
+﻿{
+ "name":"dev.textureflow.editor",
+ "version":"0.2.0",
+ "displayName":"Texture Flow Companion",
+ "description":"Imports Texture Flow masks and animated materials for PC avatars.",
+ "unity":"2022.3"
+}

@@ -1,0 +1,819 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>T.A.R.D. Manual</title><style>
+:root{color-scheme:light;font-family:Segoe UI,Arial,sans-serif;color:#182033;background:#eef2f6}
+body{max-width:1050px;margin:32px auto;padding:36px 44px;background:white;line-height:1.6}
+header{display:flex;align-items:center;gap:18px;border-bottom:3px solid #248978;padding-bottom:18px}
+header img{width:72px;height:72px;image-rendering:pixelated}header strong{font-size:22px}
+h1{font-size:36px;line-height:1.2}h2{font-size:25px;margin-top:2em;border-bottom:1px solid #cbd5e1;padding-bottom:7px}
+h3{font-size:19px;margin-top:1.5em}a{color:#006c71}p,li{overflow-wrap:anywhere}
+table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px;table-layout:auto}
+th,td{border:1px solid #cbd5e1;padding:9px 11px;vertical-align:top;overflow-wrap:anywhere}th{background:#e8f2f1;text-align:left}
+tr:nth-child(even){background:#f7f9fb}td:first-child{min-width:120px;width:28%}
+pre{background:#f0f4f7;border:1px solid #d8e1e9;padding:14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
+code{font-family:Consolas,monospace;font-size:.9em}p code,li code,td code{background:#f0f4f7;padding:1px 4px}
+.toc{background:#f5f8fb;border:1px solid #d8e1e9;padding:12px 22px}.toc a{text-decoration:none}
+footer{border-top:1px solid #cbd5e1;margin-top:40px;padding-top:15px;color:#526078}
+@page{size:A4;margin:17mm 16mm}
+@media print{:root{background:white}body{margin:0;padding:0;max-width:none;font-size:10pt;line-height:1.4}
+h1{font-size:26pt}h2{font-size:17pt;break-before:page}h3{font-size:12pt;break-after:avoid}
+h1,h2,h3{break-after:avoid}table{font-size:8.5pt}th,td{padding:6px 7px}tr{break-inside:avoid}
+pre{font-size:8pt}a{color:#185260;text-decoration:none}header{break-after:avoid}.toc{font-size:9pt}}
+</style></head><body><header><img src="data:image/png;base64,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" alt="Texture Flow icon"><div><strong>Texture Flow for VRChat</strong><br>Owner's guide and recovery handbook · version 0.2.0</div></header><h1 id="tard-manual">T.A.R.D. Manual</h1>
+<h2 id="texture-flow-for-vrchat-owners-guide-and-recovery-handbook">Texture Flow for VRChat: owner's guide and recovery handbook</h2>
+<p><strong>App version: 0.2.0 preview. Manual edition: November 24, 2026.</strong></p>
+<p>This handbook explains how to operate Texture Flow, recover from problems, and hand the project to another developer or assistant without relying on an old conversation.</p>
+<p><strong>The essential sequence is: choose textures, select the stripe, choose the avatar part, click Create &amp; Apply, then save the scene in Unity.</strong> The program does not upload an avatar to VRChat.</p>
+<h2 id="contents">Contents</h2>
+<ul>
+<li><a href="#1-what-the-application-does">1. What the application does</a></li>
+<li><a href="#2-requirements-and-compatibility">2. Requirements and compatibility</a></li>
+<li><a href="#3-install-open-and-update">3. Install, open and update</a></li>
+<li><a href="#4-first-test-the-included-demo">4. First test: the included demo</a></li>
+<li><a href="#5-prepare-your-avatar-project">5. Prepare your avatar project</a></li>
+<li><a href="#6-tab-1-textures">6. Tab 1: Textures</a></li>
+<li><a href="#7-tab-2-effect">7. Tab 2: Effect</a></li>
+<li><a href="#8-tab-3-apply">8. Tab 3: Apply</a></li>
+<li><a href="#9-restore-and-recover-an-earlier-look">9. Restore and recover an earlier look</a></li>
+<li><a href="#10-save-reopen-and-share-work">10. Save, reopen and share work</a></li>
+<li><a href="#11-files-and-folders">11. Files and folders</a></li>
+<li><a href="#12-poiyomi-liltoon-and-appearance-limits">12. Poiyomi, lilToon and appearance limits</a></li>
+<li><a href="#13-troubleshooting-by-symptom">13. Troubleshooting by symptom</a></li>
+<li><a href="#14-collect-information-for-support">14. Collect information for support</a></li>
+<li><a href="#15-backup-cleanup-and-uninstall">15. Backup, cleanup and uninstall</a></li>
+<li><a href="#16-known-limits-and-unfinished-features">16. Known limits and unfinished features</a></li>
+<li><a href="#17-verification-record-for-020">17. Verification record for 0.2.0</a></li>
+<li><a href="#18-technical-handoff-and-architecture">18. Technical handoff and architecture</a></li>
+<li><a href="#19-build-test-and-recover-development">19. Build, test and recover development</a></li>
+<li><a href="#20-owner-decisions-and-remaining-work">20. Owner decisions and remaining work</a></li>
+<li><a href="#21-references-and-glossary">21. References and glossary</a></li>
+</ul>
+<h2 id="1-what-the-application-does">1. What the application does</h2>
+<p>Imagine a shoe texture with a black stripe. You select the stripe, and the program creates a mask describing its shape. The generated material displays a moving pattern inside that fixed shape. The rest of the texture stays in place.</p>
+<p>There are two separate selections:</p>
+<ul>
+<li><strong>Image region:</strong> the pixels inside the stripe or other shape.</li>
+<li><strong>Avatar part:</strong> the Unity renderer material slot that receives the generated material.</li>
+</ul>
+<p>Selecting the stripe does not tell the app which shoe, avatar or scene object should use it. The app can select a unique part using the original texture. If more than one part uses it, you choose the intended part.</p>
+<p>A mask is a grayscale image: white enables the effect, black disables it, and gray creates a soft transition. The app also exports a cutout PNG. The normal automatic material composites the effect over an <strong>opaque</strong> surface. It does not cut physical holes in the model or turn the final material into a transparent shader.</p>
+<h2 id="2-requirements-and-compatibility">2. Requirements and compatibility</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Supported or tested behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Desktop application</td>
+<td>Windows 10/11 x64; C#/.NET/WPF</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>Included in the installer and portable release</td>
+</tr>
+<tr>
+<td>Tested Unity editor</td>
+<td>Unity 2022.3.22f1</td>
+</tr>
+<tr>
+<td>Intended avatar platform</td>
+<td>PC VRChat, Built-in Render Pipeline</td>
+</tr>
+<tr>
+<td>Avatar dependency</td>
+<td>No specific vendor; targets are standard MeshRenderer/SkinnedMeshRenderer material slots</td>
+</tr>
+<tr>
+<td>Automatic-apply shader</td>
+<td>Included TextureFlow/Masked Scroll shader</td>
+</tr>
+<tr>
+<td>Poiyomi/lilToon</td>
+<td>Experimental optional exports, not fully validated native integrations</td>
+</tr>
+<tr>
+<td>Maximum image dimensions</td>
+<td>8192 by 8192 pixels</td>
+</tr>
+<tr>
+<td>VCC</td>
+<td>Used for project discovery/opening; its installed code and settings are not modified</td>
+</tr>
+<tr>
+<td>Project permissions</td>
+<td>The app writes its own companion, exports and connection files in the selected project</td>
+</tr>
+</tbody>
+</table>
+<p>This is a preview, not a guarantee for every Unity version, render pipeline, shader or package configuration. Quest/Android shaders, URP/HDRP and ARM64 releases are not implemented.</p>
+<h2 id="3-install-open-and-update">3. Install, open and update</h2>
+<h3 id="installer">Installer</h3>
+<p>Run <code>TextureFlow-0.2.0-Setup.exe</code>. It installs per user, normally under <code>%LocalAppData%\Programs\TextureFlow</code>, and offers shortcuts. You do not need a separate .NET installation to run it.</p>
+<h3 id="portable-zip">Portable ZIP</h3>
+<p>Extract <code>TextureFlow-0.2.0-Portable-win-x64.zip</code> completely, then run <code>TextureFlow.exe</code>. Keep the <code>UnityPackage</code> directory beside the executable. Running directly inside the ZIP, or copying only the EXE, can prevent companion setup.</p>
+<pre><code class="language-text">TextureFlow.exe
+UnityPackage/
+  package.json
+  Editor/FlowImporter.cs
+  Editor/FlowBridge.cs
+  Shaders/MaskedScroll.shader
+Licenses/
+README.md
+</code></pre>
+<p>A <code>.pdb</code> debugging file and copies of this manual may also be included. The app and installer are unsigned. Obtain the owner's release and compare published SHA256 checksums when checking for a damaged or different download.</p>
+<h3 id="development-computer-location">Development computer location</h3>
+<p>The project was deliberately moved out of the unrelated Arma workspace. Its home is:</p>
+<pre><code class="language-text">A:\VRChat Texture Flow
+</code></pre>
+<p>Source is under <code>src</code>, the companion under <code>UnityPackage</code>, and downloads under <code>build\releases</code>. The local portable EXE is <code>build\portable\TextureFlow.exe</code>. A <code>Texture Flow.lnk</code> shortcut at the root points to it. Other creators do not need this drive or directory structure.</p>
+<h3 id="updating">Updating</h3>
+<p>Close Texture Flow before replacing its EXE. Run the newer installer or extract the newer portable ZIP into a separate folder. Preserve saved <code>.tflow</code> work and its adjacent assets folder. Connecting/exporting updates this tool's own companion in the selected Unity project.</p>
+<p>Use the app-managed companion. A second manual copy can cause duplicate editor classes and compilation errors.</p>
+<h2 id="4-first-test-the-included-demo">4. First test: the included demo</h2>
+<ol>
+<li>Open the app and click <strong>Try the demo</strong>.</li>
+<li>The app switches to <strong>2 Effect</strong>. The stripe is already selected and the pattern should move inside it.</li>
+<li>Try the direction and speed buttons. The outline should stay fixed.</li>
+<li>Use <strong>Show original</strong> to compare, then turn it off.</li>
+<li>For a Unity test, create a temporary cube in a disposable scene/project. The connector lists ordinary cubes as well as avatar parts.</li>
+<li>In <strong>1 Textures</strong>, select that project and open the same project in Unity.</li>
+<li>In <strong>3 Apply</strong>, click <strong>Connect to Unity / refresh avatar parts</strong>. Wait for import/compilation and leave Play mode off.</li>
+<li>Choose the cube's material slot, then click <strong>Create &amp; Apply</strong>.</li>
+<li>Inspect it in Unity. Enter Play mode after applying if needed to make animation obvious; view the cube in the Scene tab. Leave Play mode before applying/restoring again.</li>
+<li>Click <strong>Restore previous material</strong>, then remove the temporary cube when finished.</li>
+</ol>
+<p>A successful test shows a moving pattern inside a stationary stripe. A bright surface confirms emission. A surrounding halo depends on the scene's bloom; it is not guaranteed by the material alone.</p>
+<p>The demo does not automatically identify a real avatar part. Choose the test cube or intended slot explicitly instead of assuming the first row is correct.</p>
+<h2 id="5-prepare-your-avatar-project">5. Prepare your avatar project</h2>
+<p>Open the intended project in Unity, normally through VCC. Open the scene containing the avatar instance. Avatar files in the Project panel alone are not enough: the target must be in an open, loaded scene.</p>
+<p>Save the scene under a recognizable name before starting. A saved scene gives restoration a stable object identity across editor restarts. Keep your normal project backup too; a material backup is not a complete avatar/project backup.</p>
+<p>Identify the intended part. A shoe renderer may have several slots, and the same texture can be shared by several outfits or avatars. The target list provides hierarchy, material and slot names.</p>
+<p>For a first real effect, use opaque clothing/shoes. The generated material replaces the chosen slot's shader appearance. It does not automatically carry over normal maps, metallic settings, toon settings or other custom shader features.</p>
+<h2 id="6-tab-1-textures">6. Tab 1: Textures</h2>
+<h3 id="choose-the-project">Choose the project</h3>
+<p>The list reads saved VCC and Unity Hub projects, checks known projects for Unity's lockfile, and lists editor folders in the default Hub installation directory. Readable names appear in the project selector; hover an item for its full path.</p>
+<p>Use <strong>Choose project folder</strong> if a project is missing. Select the root containing both <code>Assets</code> and <code>ProjectSettings</code>, not just Assets, an avatar download folder, or a <code>.unitypackage</code> file. Discovery reads VCC settings; it does not modify them or install a VCC plugin.</p>
+<h3 id="original-and-moving-textures">Original and moving textures</h3>
+<p><strong>Open original avatar texture</strong> loads the actual image used by the material, not a screenshot of the avatar. Loading a different original replaces the selection mask and clears its undo history.</p>
+<p><strong>Open moving texture</strong> chooses the image that moves inside the selection. A seamless pattern hides repeating edges better. It may have different dimensions from the original.</p>
+<h3 id="browse-its-textures">Browse its textures</h3>
+<p>The browser searches filenames, folders and extensions. Space-separated terms must all occur in a result's relative path. Each visible result shows a thumbnail, name, path and file information.</p>
+<ul>
+<li><strong>Use as base texture:</strong> loads the original image.</li>
+<li><strong>Use as animated texture:</strong> loads the moving image.</li>
+<li>Double-click: loads the original image.</li>
+<li><strong>Include installed package textures:</strong> includes embedded/local/resolved cached package sources where dependency metadata permits discovery.</li>
+<li><strong>Refresh:</strong> searches again after files change.</li>
+</ul>
+<p>Supported source extensions: PNG, JPG/JPEG, BMP, TIF/TIFF, TGA, PSD/PSB, EXR, HDR, DDS, GIF, WebP, IFF and PICT. Individual codecs/files can still fail; the browser reports the error. Animated sources use their first frame, not a flipbook. Layered/high-bit-depth files are converted to an 8-bit editing/display surface; originals remain untouched.</p>
+<p>Generated/procedural textures, serialized Unity Texture2D <code>.asset</code> files, imported sprite sub-assets and individual cubemap faces are not separately listed as ordinary source files. The browser does not reproduce every Unity importer setting.</p>
+<h3 id="drag-and-drop">Drag and drop</h3>
+<table>
+<thead>
+<tr>
+<th>Drop</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One image on the main window</td>
+<td>Loads the original</td>
+</tr>
+<tr>
+<td>One image on Drop moving texture here</td>
+<td>Loads the moving texture</td>
+</tr>
+<tr>
+<td>One image while holding Shift</td>
+<td>Loads the moving texture</td>
+</tr>
+<tr>
+<td>Two images</td>
+<td>Original plus moving texture, in the source's supplied order</td>
+</tr>
+<tr>
+<td>Project folder or path inside a project</td>
+<td>Selects the containing project when identifiable</td>
+</tr>
+<tr>
+<td>Local path/file URI as text</td>
+<td>Resolves the local file/folder; relative Assets paths use the selected project</td>
+</tr>
+</tbody>
+</table>
+<p>Both images decode before a two-image drop replaces the current layers. If the second fails, the existing layers are kept. More than two images are rejected; use the browser for larger collections.</p>
+<p>The source application must expose a Windows file/path drag payload. Texture Flow cannot make a VCC card draggable if VCC does not expose one. Use the detected list or drag from Explorer. Remote downloads and <code>.unitypackage</code> extraction are not drag features.</p>
+<h2 id="7-tab-2-effect">7. Tab 2: Effect</h2>
+<h3 id="select-the-stripe">Select the stripe</h3>
+<p>The default is <strong>Select connected color (magic wand)</strong>. Click inside the stripe. Increase <strong>Include similar shades</strong> to include neighboring dark gray with black. If unwanted areas join the selection, Undo and try a smaller tolerance.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Select connected color</td>
+<td>Matching pixels connected to the clicked pixel</td>
+</tr>
+<tr>
+<td>Select this color everywhere</td>
+<td>Matching pixels across the image, including disconnected regions</td>
+</tr>
+<tr>
+<td>Select similar hues everywhere</td>
+<td>Uses hue, saturation and brightness tolerances against the clicked pixel</td>
+</tr>
+<tr>
+<td>Brush: add area</td>
+<td>Paints into the mask</td>
+</tr>
+<tr>
+<td>Brush: remove area</td>
+<td>Paints out of the mask</td>
+</tr>
+<tr>
+<td>Draw around an area (lasso)</td>
+<td>Drag an outline and release to close it</td>
+</tr>
+<tr>
+<td>Click around an area (polygon)</td>
+<td>Click boundary points; double-click to finish</td>
+</tr>
+</tbody>
+</table>
+<p>Color tolerance is 0–255 and compares the largest difference among RGB channels. Zero means exact channel matching, not "select nothing." Hue uses circular distance with separate saturation/value tolerances.</p>
+<h3 id="advanced-selection-and-edge-cleanup">Advanced selection and edge cleanup</h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Behavior/range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep previous selection when clicking</td>
+<td>Adds the new clicked/outlined region instead of replacing the prior mask</td>
+</tr>
+<tr>
+<td>Hue tolerance</td>
+<td>0–180 degrees around the clicked hue</td>
+</tr>
+<tr>
+<td>Saturation / brightness tolerance</td>
+<td>Each 0–1</td>
+</tr>
+<tr>
+<td>Brush size</td>
+<td>1–512 source pixels in diameter</td>
+</tr>
+<tr>
+<td>Brush softness</td>
+<td>0 hard edge; 1 broad soft edge</td>
+</tr>
+<tr>
+<td>Cleanup amount</td>
+<td>Radius of 1–128 source pixels</td>
+</tr>
+<tr>
+<td>Grow / Shrink</td>
+<td>Expands/contracts using square neighborhoods</td>
+</tr>
+<tr>
+<td>Soften edges</td>
+<td>Box feather producing gray mask edges</td>
+</tr>
+<tr>
+<td>Smooth</td>
+<td>Morphological opening; removes noise/protrusions and can remove small selected details</td>
+</tr>
+<tr>
+<td>Fill gaps</td>
+<td>Fills enclosed holes, not only tiny holes</td>
+</tr>
+<tr>
+<td>Undo selection</td>
+<td>Up to four retained whole-mask states</td>
+</tr>
+<tr>
+<td>Clear selection</td>
+<td>Clears the mask; selection Undo can normally recover the previous state</td>
+</tr>
+</tbody>
+</table>
+<p>Cleanup changes the mask, not the source image. Start with a small radius, particularly around fine artwork.</p>
+<h3 id="movement-and-glow">Movement and glow</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Meaning/range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right / Up / Left / Down</td>
+<td>0 / 90 / 180 / 270 degrees in texture coordinates</td>
+</tr>
+<tr>
+<td>Custom direction</td>
+<td>0–360 degrees, under Advanced motion</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>0.01–100 texture-coordinate units/second</td>
+</tr>
+<tr>
+<td>Slow / Medium / Fast</td>
+<td>0.05 / 0.25 / 1</td>
+</tr>
+<tr>
+<td>Repeat X / Y</td>
+<td>Each 0.01–1000</td>
+</tr>
+<tr>
+<td>Rotation</td>
+<td>Static pattern rotation, 0–360 degrees</td>
+</tr>
+<tr>
+<td>Glow strength</td>
+<td>0–100</td>
+</tr>
+<tr>
+<td>Glow color</td>
+<td>Hex, for example <code>#40DFFF</code></td>
+</tr>
+<tr>
+<td>Extra HDR brightness</td>
+<td>-10 to 16 stops; emission multiplies by 2 to this power</td>
+</tr>
+</tbody>
+</table>
+<p>Up means texture-preview up, not world up. UV layouts can rotate/mirror the image on the model; inspect in Unity and adjust direction if needed. Glow strength zero removes extra emission but still leaves the moving pattern as surface color. Start with strength 2 and HDR 0; high values can wash out detail.</p>
+<h3 id="preview-controls">Preview controls</h3>
+<p><strong>Play animation</strong> pauses/resumes the desktop preview only; it does not export a Unity stop-animation switch. <strong>Show original</strong> displays the source. <strong>Highlight selected area</strong> shows the mask overlay; disable it for a clean result. Wheel zooms, middle-button drag pans. <strong>Preview layers</strong> contains Original texture, Moving texture and Glow display toggles.</p>
+<p>These toggles are preview options, not switches that remove components from the exported material. This is a 2D composite rather than a live 3D avatar view. Exports retain source resolution despite the reduced preview size.</p>
+<h2 id="8-tab-3-apply">8. Tab 3: Apply</h2>
+<h3 id="connect">Connect</h3>
+<p>Keep the selected project and avatar scene open in Unity, leave Play mode, then click <strong>Connect to Unity / refresh avatar parts</strong>. The app installs/updates its own companion automatically. Allow Unity to import and compile; click Unity's window if it needs a refresh.</p>
+<p>No code pasting/editing is required. Project-wide compilation errors from any package can prevent editor extensions from running.</p>
+<h3 id="choose-the-exact-target">Choose the exact target</h3>
+<p>The list contains loaded scene MeshRenderer/SkinnedMeshRenderer material slots, including ordinary cubes and inactive child objects. Preview scenes are excluded. A row resembles:</p>
+<pre><code class="language-text">My Avatar / Shoes | Shoe material (slot 0)
+</code></pre>
+<p>Check the avatar hierarchy, part and slot. A unique original-texture match can be selected automatically. Multiple matches require a choice; the app does not mean "all avatars" when several rows match.</p>
+<h3 id="create-apply">Create &amp; Apply</h3>
+<p>After selecting an image region and intended target, the button:</p>
+<ol>
+<li>Checks images, selection, connection and target information.</li>
+<li>Creates a new export containing images, mask and settings.</li>
+<li>Waits for Unity to create the animated material.</li>
+<li>Requests assignment of <code>Animated.mat</code> to that one slot.</li>
+<li>Waits for Unity's response and displays success or the reason it stopped.</li>
+<li>Records the previous reference and a material snapshot for restoration.</li>
+</ol>
+<p>Other slots are preserved. This is a real edit to the open Unity scene, but not a modification to VCC or Unity installation code.</p>
+<p><strong>Save the scene in Unity to keep the assignment.</strong> The app marks it dirty but does not silently save your other scene edits. It does not upload to VRChat, change the SDK avatar identity or publish a world.</p>
+<h3 id="create-files-without-assigning">Create files without assigning</h3>
+<p>Expand <strong>Save files without applying</strong> and choose <strong>Create Unity material only</strong>. Files and a material request are created, but the avatar is not assigned a new material. Unity creates <code>Animated.mat</code> after import. Manual assignment also remains available under <strong>Tools &gt; Texture Flow &gt; Apply Animated Material</strong> in Unity.</p>
+<h2 id="9-restore-and-recover-an-earlier-look">9. Restore and recover an earlier look</h2>
+<p>Select the same project, connect, and click <strong>Restore previous material</strong> to reverse the latest recorded app assignment. Save the scene afterward if you want to keep the restored state. Unity Undo/Redo also works; that history is not a permanent backup.</p>
+<p>Each application records what occupied the slot immediately before it. After several applications, the most recent previous material may itself be an older generated effect. Restore handles the latest recorded step, not an unlimited chain back to the avatar's original look.</p>
+<h3 id="when-restore-is-unavailable">When Restore is unavailable</h3>
+<p>Check project, connection and Play mode. The app pointer is <code>Library/TextureFlow/desktop-restore.json</code>; the receipt and material snapshot are in the corresponding export. Clearing Library can remove the pointer without removing the export's backups.</p>
+<p>For manual recovery, inspect the appropriate <code>PreviousMaterial-&lt;request-id&gt;.mat</code> in Unity and assign it to the intended slot. Keep the receipt so a developer can identify the original reference. A <code>.mat</code> snapshot can reference other assets: copying it alone is not a complete portable backup.</p>
+<h3 id="when-restore-refuses">When Restore refuses</h3>
+<p>If that slot received a newer material assignment, restore stops to preserve it. Inspect the current Unity assignment before doing anything else. Repeated clicks do not remove the check.</p>
+<p>Across Unity restarts, restoration needs the original saved scene and object open again. Unsaved scenes, recreated/deleted objects, lost scenes, missing originals or deleted backups can prevent recovery. Use a project backup when material-only recovery is insufficient.</p>
+<h2 id="10-save-reopen-and-share-work">10. Save, reopen and share work</h2>
+<p><strong>Save work</strong> requires both original and moving textures. It creates:</p>
+<pre><code class="language-text">Shoe Energy.tflow
+Shoe Energy.tflow.assets/
+  base.png
+  flow.png
+  mask.png
+  cutout.png
+  session.json
+</code></pre>
+<p>Keep the file and adjacent folder together. The session uses a relative assets-folder name. The mask remains editable after reopening. Loading rejects assets outside the session's containing directory.</p>
+<p>Renderer connections are not portable session data: reconnect and choose the intended target in the recipient's project. Saving over the same name updates its saved assets; use a new name for a separate version.</p>
+<p>Sharing a session can share avatar artwork. The app does not determine redistribution rights. Use the generic demo when you do not want to include personal or paid-avatar textures.</p>
+<h2 id="11-files-and-folders">11. Files and folders</h2>
+<p>Each export has its own timestamped folder:</p>
+<pre><code class="language-text">Assets/TextureFlow/
+  Companion/
+    Editor/FlowImporter.cs
+    Editor/FlowBridge.cs
+    Shaders/MaskedScroll.shader
+    package.json
+  Exports/
+    Flow-&lt;timestamp&gt;-&lt;suffix&gt;/
+      base.png
+      flow.png
+      mask.png
+      cutout.png
+      session.json
+      flow-request.json
+      flow-result.json
+      Animated.mat
+      Native.mat                       (if a native adapter succeeds)
+      apply-backup-&lt;request-id&gt;.json    (after automatic application)
+      PreviousMaterial-&lt;request-id&gt;.mat (if the previous slot was not empty)
+</code></pre>
+<p>Unity adds <code>.meta</code> files. Preserve them when moving assets so their references remain consistent.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base.png / flow.png</td>
+<td>Exported original and moving images</td>
+</tr>
+<tr>
+<td>mask.png</td>
+<td>Fixed grayscale selection: white enables the effect</td>
+</tr>
+<tr>
+<td>cutout.png</td>
+<td>Original image with alpha reduced in selected areas</td>
+</tr>
+<tr>
+<td>session.json</td>
+<td>Effect configuration</td>
+</tr>
+<tr>
+<td>flow-request.json</td>
+<td>Material-creation request</td>
+</tr>
+<tr>
+<td>flow-result.json</td>
+<td>Unity's material import result</td>
+</tr>
+<tr>
+<td>Animated.mat</td>
+<td>Normal automatic-apply material using the included shader</td>
+</tr>
+<tr>
+<td>Native.mat</td>
+<td>Experimental native-shader material if successfully created</td>
+</tr>
+<tr>
+<td>apply-backup-*.json</td>
+<td>Target identity, original reference and restore information</td>
+</tr>
+<tr>
+<td>PreviousMaterial-*.mat</td>
+<td>Snapshot of previous material properties</td>
+</tr>
+</tbody>
+</table>
+<p>The connector uses a separate local folder:</p>
+<pre><code class="language-text">Library/TextureFlow/
+  connection.json
+  desktop-restore.json
+  requests/&lt;request-id&gt;.json
+  results/&lt;request-id&gt;.json
+</code></pre>
+<p>Library files are local connection/cache state, not avatar assets. Exported assets and backups may be referenced by a scene. Do not treat all of <code>Assets/TextureFlow</code> as disposable.</p>
+<h2 id="12-poiyomi-liltoon-and-appearance-limits">12. Poiyomi, lilToon and appearance limits</h2>
+<p>The Advanced shader choice affects optional native exports. <code>Animated.mat</code> is always generated with the included shader and is used by <strong>Create &amp; Apply</strong>. Selecting a native shader does not cause that button to assign <code>Native.mat</code>.</p>
+<p>Native adapters attempt emission, masks, pan and tiling through installed properties. Missing shaders/properties or unsupported native rotation are reported in <code>flow-result.json</code>. The standard material remains available. Cross-version appearance, locking/build stripping and VRChat upload behavior of native adapters have not been comprehensively validated.</p>
+<p>The normal shader supplies a lit, opaque scrolling effect with emission. It does not duplicate every original material feature. A whole slot can look different even if the selected stripe is small. Original references/backups let you go back.</p>
+<p>Desktop brightness does not guarantee a bloom halo in a world. World lighting, post-processing, exposure and shader restrictions affect the result. Inspect it in Unity and the intended VRChat context before considering it finished.</p>
+<h2 id="13-troubleshooting-by-symptom">13. Troubleshooting by symptom</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App will not open</td>
+<td>Fully extract the ZIP; use Windows x64; close the old instance before replacing files; try a fresh extraction or installer</td>
+</tr>
+<tr>
+<td>Project missing</td>
+<td>Choose the root manually; confirm Assets and ProjectSettings exist</td>
+</tr>
+<tr>
+<td>VCC card will not drag</td>
+<td>Use the detected project list or drag from Explorer; the card may not provide a drag payload</td>
+</tr>
+<tr>
+<td>Browser empty</td>
+<td>Check project, clear search, enable package textures; generated/serialized textures are not ordinary image results</td>
+</tr>
+<tr>
+<td>Thumbnail error</td>
+<td>Try another file; check whether it opens elsewhere; retain the error message</td>
+</tr>
+<tr>
+<td>Selection includes unwanted gray/black</td>
+<td>Undo, lower tolerance and use add/remove brushes</td>
+</tr>
+<tr>
+<td>Disconnected black regions selected</td>
+<td>Choose connected-color rather than whole-image color selection</td>
+</tr>
+<tr>
+<td>Overlay obscures effect</td>
+<td>Turn off Highlight selected area</td>
+</tr>
+<tr>
+<td>Pattern appears outside stripe</td>
+<td>Check mask/selection and that you are viewing the generated Animated.mat</td>
+</tr>
+<tr>
+<td>Motion reversed on shoe</td>
+<td>UVs can rotate/mirror the image; change direction and inspect again</td>
+</tr>
+<tr>
+<td>Pattern seam visible</td>
+<td>Use a seamless source or adjust repetition/rotation</td>
+</tr>
+<tr>
+<td>Pattern washed out</td>
+<td>Reduce Glow strength/HDR and inspect scene exposure/bloom</td>
+</tr>
+<tr>
+<td>No glow halo</td>
+<td>Emission and bloom are separate; the scene/world controls bloom</td>
+</tr>
+<tr>
+<td>Connect keeps waiting</td>
+<td>Open the same project, click Unity's window, wait for import/compile, leave Play mode and check Console errors</td>
+</tr>
+<tr>
+<td>No avatar parts</td>
+<td>Open the scene containing the avatar instance, not only its prefab file in the Project panel</td>
+</tr>
+<tr>
+<td>Several/wrong parts</td>
+<td>Read hierarchy/material/slot labels and explicitly choose the intended slot</td>
+</tr>
+<tr>
+<td>Apply asks for a region</td>
+<td>Select or paint a visible area in Effect</td>
+</tr>
+<tr>
+<td>Stale part/material error</td>
+<td>Refresh and reselect after changes in Unity</td>
+</tr>
+<tr>
+<td>Files exist but material not ready</td>
+<td>Read flow-result.json and Console; source PNGs do not prove successful material import</td>
+</tr>
+<tr>
+<td>Assignment not confirmed</td>
+<td>Inspect Unity before retrying; a timeout is not proof that an in-flight assignment did not finish</td>
+</tr>
+<tr>
+<td>Old shading details lost</td>
+<td>The new shader replaces that slot's shading; Restore if unsuitable</td>
+</tr>
+<tr>
+<td>Change disappears after reopening</td>
+<td>Save the scene after applying/restoring; Play-mode-only edits should not be expected to persist</td>
+</tr>
+<tr>
+<td>Restore disabled/refuses</td>
+<td>Check project, connection, saved scene, restore record and newer assignments</td>
+</tr>
+<tr>
+<td>Duplicate class errors</td>
+<td>Look for a second manual/old companion copy; preserve backups and keep one installation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="understand-the-status-message">Understand the status message</h3>
+<p>Connection, material creation, assignment and restoration are separate stages. Export success is not assignment success. Record the exact message and button when something stops.</p>
+<p>The app normally waits about 35 seconds for connection, up to 45 for material import, and about 40 plus a short recheck for an assignment response. These are timeouts, not guaranteed completion times for large or broken projects.</p>
+<p>Unprocessed assignment requests are withdrawn after a desktop timeout, and commands have an expiry. A request already being processed can still finish near a timeout; inspect Unity before retrying. Replay checks help prevent a processed command from being assigned twice.</p>
+<h2 id="14-collect-information-for-support">14. Collect information for support</h2>
+<p>Provide:</p>
+<ol>
+<li>App, Windows and Unity versions.</li>
+<li>The tab and exact button used.</li>
+<li>The complete status/error message.</li>
+<li>Whether the selected project and avatar scene are open.</li>
+<li>Whether Unity is importing, compiling or playing.</li>
+<li>Target hierarchy/material/slot, redacted if sharing publicly.</li>
+<li>Relevant Unity Console errors.</li>
+<li>Relevant flow-result/connector result JSON and restore receipt.</li>
+<li>Whether the demo works in a disposable project.</li>
+</ol>
+<p>Unity's local editor log is normally <code>%LocalAppData%\Unity\Editor\Editor.log</code>. Logs/JSON can contain private paths and avatar/object names: review before posting. Never upload credentials or authentication tokens.</p>
+<p>There is no dedicated crash-upload service or guaranteed persistent desktop diagnostic log in this release. Save the visible error and relevant result files.</p>
+<h2 id="15-backup-cleanup-and-uninstall">15. Backup, cleanup and uninstall</h2>
+<p>Keep independent project backups. Preserve saved scenes, originals, source textures, referenced Texture Flow exports and Unity <code>.meta</code> files.</p>
+<p>Desktop uninstall does not remove exports or the companion from projects. A portable folder can be removed after closing the app and preserving saved work.</p>
+<p>Before project cleanup, restore or choose the assignments you want and back up the project. Do not remove the generated shader while materials still rely on it: missing shaders can make surfaces pink. Removing editor scripts does not undo scene assignments.</p>
+<p>Clearing Library forces reimport and removes local connection state, including the remembered restore pointer. It is not the first troubleshooting step. Receipts/snapshots under Assets are separate and should be preserved.</p>
+<h2 id="16-known-limits-and-unfinished-features">16. Known limits and unfinished features</h2>
+<p>The original product wish list is not a completed feature list:</p>
+<ul>
+<li>No AI-assisted subject/object selection. Simplifying the UI did not introduce an AI engine.</li>
+<li>No freely reorderable Photoshop-style layer stack.</li>
+<li>No rainbow/pulse modes or named energy/lava/fire/water preset library.</li>
+<li>No pressure input or emission color-picker dialog; color is hex input.</li>
+<li>No synchronized 3D desktop avatar preview or continuous parameter streaming to Unity.</li>
+<li>Re-export creates a new folder rather than updating a prior effect in place.</li>
+<li>No Quest/Android, URP/HDRP or ARM64 release support.</li>
+<li>Native Poiyomi/lilToon adapters remain experimental.</li>
+<li>Apply does not preserve all original material/shader features.</li>
+<li>Browser results are source files, not every Unity-generated texture sub-asset.</li>
+<li>8-bit editing/export does not retain all HDR/PSD authoring information.</li>
+<li>Large-image painting, export throughput and sustained 60 FPS are not comprehensively benchmarked.</li>
+</ul>
+<p>The preview samples at most 640 pixels in width. Its timer targets roughly 16 ms, but composition runs on the UI thread and 60 FPS is not guaranteed. Large source arrays, masks and undo states can use over 1 GB. An 8192-square grow operation took roughly 0.5–0.8 seconds in recorded development runs; this is a local observation, not a hardware guarantee.</p>
+<h2 id="17-verification-record-for-020">17. Verification record for 0.2.0</h2>
+<p>Recorded successful checks:</p>
+<ul>
+<li><strong>46 desktop checks:</strong> selection, cleanup, source preservation, export, codecs, drag data, thumbnails/search, three-step UI, connection/ambiguity/expiry/busy handling and 8192-square masks.</li>
+<li><strong>27 Unity checks:</strong> shader/material/mask/velocity, readable targets, exact-slot apply, other-slot preservation, backups, Undo/Redo, restore, replay handling, stale identities/sessions/materials, expiry, restricted paths, saved-scene recovery, file commands and Play-mode refusal.</li>
+<li><strong>Two live integration checks:</strong> actual desktop Create &amp; Apply and Restore actions communicated with a running disposable Unity 2022.3.22f1 editor; the original material GUID was restored.</li>
+</ul>
+<p>Packaged EXE startup/version and correspondence between packaged companion and tested source were checked. These tests do not prove every avatar's visual appearance, every native shader version or a VRChat upload.</p>
+<h2 id="18-technical-handoff-and-architecture">18. Technical handoff and architecture</h2>
+<p>Ordinary ownership does not require the following developer details. They are included so another developer or assistant can continue the project.</p>
+<pre><code class="language-text">src/TextureFlow/
+  TextureFlow.csproj          .NET 9 Windows WPF, app 0.2.0
+  App.xaml / App.xaml.cs      Application entry
+  MainWindow.xaml            Three-step UI and named controls
+  MainWindow.xaml.cs         Selection, preview, sessions, export entry
+  MainWindow.Import.cs       Texture browser and file/path drops
+  MainWindow.Unity.cs        Connection, target choice, apply/restore
+  Imaging.cs                 Raster arrays, masks, FlowSettings
+  ProjectTextures.cs         Project lookup, scan and decode
+  TextureBrowser.xaml[.cs]   Virtualized browser
+  ProjectNameConverter.cs    Readable project names
+  Assets/AppIcon.png/.ico    Supplied image and embedded Windows icon
+UnityPackage/
+  Editor/FlowImporter.cs     Texture import/material creation
+  Editor/FlowBridge.cs       Target discovery, commands and backups
+  Shaders/MaskedScroll.shader
+  package.json
+Build.ps1                    Publish, ZIP, installer, checksums
+installer.iss                Per-user Inno Setup installer
+Licenses/                    Dependency notices
+tests/                       Desktop, Unity and live integration tests
+</code></pre>
+<p>On the development machine use <code>A:\VRChat Texture Flow</code>, not the old Arma directory. Do not edit VCC installation files or Unity binaries to implement app features.</p>
+<h3 id="desktop-design">Desktop design</h3>
+<p>The project targets <code>net9.0-windows</code> and publishes self-contained for <code>win-x64</code>. Magick.NET-Q8-x64 15.0.0 decodes images; WPF bitmap APIs support preview/PNG output. Dependency notices ship with releases.</p>
+<p>Source rasters are BGRA byte arrays; the mask is a separate byte per pixel. Four whole-mask undo copies are retained. Large selection/cleanup operations use workers; preview composition is currently on the UI thread.</p>
+<p>The browser scans asynchronously with a virtualized list and two concurrent thumbnail decoders. Visible-row references are released on unload. Package-cache enumeration consults dependency metadata to avoid indiscriminately listing stale cached versions.</p>
+<h3 id="unity-importer">Unity importer</h3>
+<p>The desktop writes flow-request.json after export/companion files. The importer processes pending requests, imports the mask as linear/clamped data and the flow image as repeating color data, and creates Animated.mat. Material creation and scene assignment have separate result files. Request/result timestamps determine pending import work.</p>
+<p>The fallback shader samples a fixed mask and separately samples the pattern with time-based pan, repetition and rotation. Emission is tinted/masked. It is an opaque Built-in surface shader, not a universal preservation layer for original shaders.</p>
+<h3 id="connection-and-commands">Connection and commands</h3>
+<p>Protocol version is <strong>1</strong>. The bridge publishes connection.json about every two editor seconds. The desktop polls about once per second and considers a heartbeat older than ten seconds stale.</p>
+<p>A snapshot contains session ID, timestamp, busy state and targets. Targets include renderer instance/global IDs, slot, expected material instance/GUID, source texture path and label. Unity SessionState preserves the session identifier through assembly reloads within one editor session.</p>
+<p>Commands/replies use Library/TextureFlow/requests and results. Actions are apply/restore. Commands contain request ID, session ID, expiry and target/material or receipt. Normal commands expire about one minute after creation.</p>
+<p>Assignment checks editor state, session, expiry, renderer/global identity, slot and expected material. Apply accepts the generated Animated.mat within Assets/TextureFlow/Exports with the expected shader. It backs up the previous reference/properties, changes one shared-material array element, records prefab-instance changes, marks the scene dirty and supports Unity Undo. It does not save the scene automatically.</p>
+<p>Restore verifies that the current slot still contains the applied material. A repeat apply request with an existing matching receipt/current assignment returns already-applied rather than assigning again. Saved-scene restore can resolve global object identity after restarting the editor.</p>
+<p>JSON writes use temporary files/renames. A short replace/read race is possible, so readers tolerate transient missing/partial data. A timeout is not proof an in-flight operation did not finish; support advice/status should preserve this nuance.</p>
+<h3 id="maintenance-constraints">Maintenance constraints</h3>
+<ul>
+<li>Keep desktop JSON property names compatible with Unity's serialized field names.</li>
+<li>WPF target display bindings need properties: the desktop AvatarTarget.label is a property, not merely a field.</li>
+<li>Touch controls on the dispatcher; use workers for decoding/filtering.</li>
+<li>Disable project/target/apply actions while a request is running; prevent duplicate clicks.</li>
+<li>Never silently pick among multiple matching avatar parts.</li>
+<li>Preserve stale-target, expected-material, session, expiry, Play-mode and restore-conflict checks.</li>
+<li>Keep source arrays unchanged and verify mask polarity/cutout alpha.</li>
+<li>Preserve the supplied icon and drag/browser functionality.</li>
+<li>Do not claim native-shader, Quest, AI or universal compatibility without implementation/testing.</li>
+<li>Do not publish personal avatar textures, caches, logs or credentials as source.</li>
+</ul>
+<h2 id="19-build-test-and-recover-development">19. Build, test and recover development</h2>
+<p>Developer commands, run from the product directory:</p>
+<pre><code class="language-powershell">Set-Location 'A:\VRChat Texture Flow'
+dotnet build .\src\TextureFlow -c Release
+dotnet run --project .\tests -c Release -- 'A:/VRChat Texture Flow/build/desktop-test'
+.\tests\Run-UnitySmoke.ps1
+.\tests\Run-LiveApply.ps1
+.\Build.ps1 -InnoCompiler 'A:/VRChat Texture Flow/tools/InnoSetup/ISCC.exe'
+</code></pre>
+<p>Rebuilding needs the .NET 9 SDK and Windows desktop support; running the release does not require an SDK. Without InnoCompiler, Build.ps1 produces the portable app/ZIP but does not compile the installer. Outputs and SHA256 checksums are under build/releases. Close the portable app before overwriting its executable.</p>
+<p><strong>Use disposable test locations, never a personal avatar project.</strong> Tests create images/exports/companion files, open/create scenes and materials, and change test assignments. Unity scripts default to the installed 2022.3.22f1 editor path; pass <code>-UnityExe</code> if yours is elsewhere. Their current disposable project is build/unity-apply-test.</p>
+<p>Useful results:</p>
+<pre><code class="language-text">build/desktop-test/desktop-tests.txt
+build/unity-apply-test/desktop-tests.txt
+build/unity-apply-test/unity-smoke-result.txt
+build/unity-apply-test/unity-smoke.log
+build/unity-apply-test/live-apply-result.txt
+build/unity-apply-test/live-unity.log
+</code></pre>
+<p>The live harness starts/stops its own hidden batch Unity process. Do not attach it to the user's active avatar project.</p>
+<h3 id="when-a-developer-or-assistant-is-stuck">When a developer or assistant is stuck</h3>
+<ol>
+<li>Read this handbook, README and relevant source before changing behavior.</li>
+<li>Reproduce with the demo in a disposable project.</li>
+<li>Identify the failing stage: decode, selection, export, material import, connection, assignment or restore.</li>
+<li>Read the matching result file, not just the UI status.</li>
+<li>Preserve existing scene/material references before recovery.</li>
+<li>Make a focused repair and run tests covering that failure.</li>
+<li>Run Unity/live tests for companion, protocol, apply or restore changes.</li>
+<li>Verify packaged companion/source correspondence and EXE startup.</li>
+<li>Update this manual for behavior/limit changes; publish versioned downloads/checksums.</li>
+</ol>
+<p>A moved test project's old Library/Bee cache once failed to include a new script. A clean disposable unity-apply-test compiled successfully. This is a test-environment lead, not permission to delete a user's Library or ignore genuine compiler errors.</p>
+<h2 id="20-owner-decisions-and-remaining-work">20. Owner decisions and remaining work</h2>
+<p>The owner requested a dedicated, shareable Windows scrolling-emissive-mask creator: independent of Unity as an application, with minimal masking work and no manual Photoshop/code work. The owner approved automatic updates of <strong>Texture Flow's own companion inside selected projects</strong>, while leaving VCC/Unity installations unchanged.</p>
+<p>The source/build home is a new top-level A-drive directory. The provided pixel-art image is embedded in the EXE, windows/taskbar and installer. The simplified interface has three tabs. Automatic assignment must remain target-specific and recoverable rather than guessing among avatars.</p>
+<p>The original wish list remains a roadmap, not a completed feature list. Valuable next work includes preserving more original material features, validating native adapters, improving large-image preview performance, clearer original-texture provenance in sessions and stronger setup diagnostics. AI selection and section 16's other unfinished features remain future work.</p>
+<p>This handbook describes version 0.2.0. Update its version, tests, protocol and limits when the product changes.</p>
+<h2 id="21-references-and-glossary">21. References and glossary</h2>
+<p>Primary references for adjacent tools:</p>
+<ul>
+<li><a href="https://creators.vrchat.com/">VRChat creator documentation</a></li>
+<li><a href="https://creators.vrchat.com/sdk/upgrade/current-unity-version/">VRChat Unity version guidance</a></li>
+<li><a href="https://vcc.docs.vrchat.com/">Creator Companion documentation</a></li>
+<li><a href="https://www.poiyomi.com/10.0/special-fx/emission">Poiyomi emission</a></li>
+<li><a href="https://lilxyzw.github.io/lilToon/ja_JP/color/emission.html">lilToon emission</a></li>
+<li><a href="https://github.com/dlemstra/Magick.NET">Magick.NET</a></li>
+</ul>
+<p>App source/tests determine its own behavior. External shader documentation does not turn an experimental adapter into validated support.</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Texture</td>
+<td>Image placed on a 3D model</td>
+</tr>
+<tr>
+<td>Mask</td>
+<td>Image controlling where an effect appears</td>
+</tr>
+<tr>
+<td>Material</td>
+<td>Unity's shader, texture and surface settings</td>
+</tr>
+<tr>
+<td>Shader</td>
+<td>Rendering code that determines surface appearance</td>
+</tr>
+<tr>
+<td>Renderer</td>
+<td>Component that draws a mesh/skinned mesh</td>
+</tr>
+<tr>
+<td>Material slot</td>
+<td>Position in the renderer's material list</td>
+</tr>
+<tr>
+<td>UVs</td>
+<td>Coordinates placing an image on a model</td>
+</tr>
+<tr>
+<td>Emission</td>
+<td>Surface brightness independent of ordinary lighting</td>
+</tr>
+<tr>
+<td>Bloom</td>
+<td>Viewing/post-processing effect that can add a halo</td>
+</tr>
+<tr>
+<td>Scene</td>
+<td>Open Unity arrangement containing the avatar instance</td>
+</tr>
+<tr>
+<td>Prefab</td>
+<td>Reusable object asset, distinct from its scene instance</td>
+</tr>
+<tr>
+<td>Companion</td>
+<td>Texture Flow's included project editor extension</td>
+</tr>
+<tr>
+<td>Export</td>
+<td>Creates files/material request; not necessarily assignment</td>
+</tr>
+<tr>
+<td>Apply</td>
+<td>Assigns generated material to one chosen slot</td>
+</tr>
+<tr>
+<td>Receipt</td>
+<td>Saved target/previous-material restoration record</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Remember: Textures → Effect → Apply → save the Unity scene.</strong></p><footer>T.A.R.D. Manual · November 24, 2026 · app 0.2.0 preview. Preserve this handbook with the project source and release downloads.</footer></body></html>
