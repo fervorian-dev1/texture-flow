@@ -18,12 +18,13 @@ static class LiveApplyTests
    var targets=Field<ComboBox>(main,"Targets");var target=targets.Items.Cast<AvatarTarget>().Single(t=>t.label.Contains("Beginner test avatar / Shoes")&&t.slot==0);string originalGuid=target.materialGuid;targets.SelectedItem=target;
    Call(main,"CreateAndApply",null,new RoutedEventArgs());await Wait(()=>!Field<bool>(main,"busy"),100,"Create & Apply did not finish.");
    string? receipt=Field<string?>(main,"lastReceipt");if(receipt==null||!File.Exists(Path.Combine(root,receipt)))throw new Exception("Apply button did not produce a receipt: "+Field<TextBlock>(main,"Status").Text);
-   Console.WriteLine("PASS actual desktop Create & Apply button received successful Unity confirmation");
+   var config=System.Text.Json.JsonSerializer.Deserialize<FlowSettings>(File.ReadAllText(Path.Combine(root,Path.GetDirectoryName(receipt)!,"flow-request.json")),new System.Text.Json.JsonSerializerOptions{IncludeFields=true})!;if(config.schemaVersion!=2||config.layers.Length!=2||config.layers[0].settings.speed==config.layers[1].settings.speed)throw new Exception("Live apply did not send both independent areas.");
+   Console.WriteLine("PASS actual desktop Create & Apply button sent two independent areas and received Unity confirmation");
    if(!Field<Button>(main,"RestoreButton").IsEnabled)throw new Exception("Restore action was not enabled.");
    Call(main,"RestoreMaterial",null,new RoutedEventArgs());await Wait(()=>!Field<bool>(main,"busy"),60,"Restore did not finish.");
    if(!Field<TextBlock>(main,"Status").Text.StartsWith("Previous material restored"))throw new Exception("Restore failed: "+Field<TextBlock>(main,"Status").Text);
    await Wait(()=>{Call(main,"RefreshConnection");return Field<ComboBox>(main,"Targets").Items.Cast<AvatarTarget>().Any(t=>t.key==target.key&&t.materialGuid==originalGuid);},10,"Unity did not restore the original material GUID.");
-   Console.WriteLine("PASS actual desktop Restore button restored original material in running Unity");File.WriteAllText(Path.Combine(root,"live-apply-result.txt"),"PASS desktop Create & Apply and Restore through a live Unity editor; original material GUID restored.");
+   Console.WriteLine("PASS actual desktop Restore button restored original material in running Unity");File.WriteAllText(Path.Combine(root,"live-apply-result.txt"),"PASS desktop Create & Apply with two independently animated areas, and Restore through a live Unity editor; original material GUID restored.");
   }catch(Exception ex){Console.Error.WriteLine(ex);File.WriteAllText(Path.Combine(root,"live-apply-result.txt"),ex.ToString());code=1;}finally{File.WriteAllText(Path.Combine(root,"Library/TextureFlow/live-stop.txt"),"stop");main?.Close();app.Shutdown();}};app.Run();return code;
  }
 }

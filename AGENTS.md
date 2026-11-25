@@ -1,6 +1,6 @@
-# Texture Flow project handoff
+﻿# Texture Flow project handoff
 
-Read `T.A.R.D. Manual.md`, particularly chapters 18-20, before substantial changes or recovery work. It records the architecture, owner decisions, known limits, test commands and recovery procedures for version 0.2.0.
+Read `T.A.R.D. Manual.md`, particularly chapters 18-20, before substantial changes or recovery work. It records the architecture, owner decisions, known limits, test commands and recovery procedures for version 0.3.0.
 
 - The product is a standalone Windows app. Do not move it back into the Arma workspace.
 - Leave VCC and Unity installation code/settings untouched. The owner approved automatic setup/update of Texture Flow's own companion inside selected Unity projects.

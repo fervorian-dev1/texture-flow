@@ -2,7 +2,7 @@
 
 ## Texture Flow for VRChat: owner's guide and recovery handbook
 
-**App version: 0.2.0 preview. Manual edition: November 24, 2026.**
+**App version: 0.3.0 preview. Manual edition: November 24, 2026.**
 
 This handbook explains how to operate Texture Flow, recover from problems, and hand the project to another developer or assistant without relying on an old conversation.
 
@@ -26,7 +26,7 @@ This handbook explains how to operate Texture Flow, recover from problems, and h
 - [14. Collect information for support](#14-collect-information-for-support)
 - [15. Backup, cleanup and uninstall](#15-backup-cleanup-and-uninstall)
 - [16. Known limits and unfinished features](#16-known-limits-and-unfinished-features)
-- [17. Verification record for 0.2.0](#17-verification-record-for-020)
+- [17. Verification record for 0.3.0](#17-verification-record-for-030)
 - [18. Technical handoff and architecture](#18-technical-handoff-and-architecture)
 - [19. Build, test and recover development](#19-build-test-and-recover-development)
 - [20. Owner decisions and remaining work](#20-owner-decisions-and-remaining-work)
@@ -43,6 +43,8 @@ There are two separate selections:
 
 Selecting the stripe does not tell the app which shoe, avatar or scene object should use it. The app can select a unique part using the original texture. If more than one part uses it, you choose the intended part.
 
+Each of up to eight independent areas has its own moving image, mask, speed, direction, repetition, rotation and tint. All enabled areas are combined in one material on the original texture.
+
 A mask is a grayscale image: white enables the effect, black disables it, and gray creates a soft transition. The app also exports a cutout PNG. The normal automatic material composites the effect over an **opaque** surface. It does not cut physical holes in the model or turn the final material into a transparent shader.
 
 ## 2. Requirements and compatibility
@@ -57,6 +59,7 @@ A mask is a grayscale image: white enables the effect, black disables it, and gr
 | Automatic-apply shader | Included TextureFlow/Masked Scroll shader |
 | Poiyomi/lilToon | Experimental optional exports, not fully validated native integrations |
 | Maximum image dimensions | 8192 by 8192 pixels |
+| Independent areas | Up to eight per original texture/material; PC shader model 4.0 |
 | VCC | Used for project discovery/opening; its installed code and settings are not modified |
 | Project permissions | The app writes its own companion, exports and connection files in the selected project |
 
@@ -66,11 +69,11 @@ This is a preview, not a guarantee for every Unity version, render pipeline, sha
 
 ### Installer
 
-Run `TextureFlow-0.2.0-Setup.exe`. It installs per user, normally under `%LocalAppData%\Programs\TextureFlow`, and offers shortcuts. You do not need a separate .NET installation to run it.
+Run `TextureFlow-0.3.0-Setup.exe`. It installs per user, normally under `%LocalAppData%\Programs\TextureFlow`, and offers shortcuts. You do not need a separate .NET installation to run it.
 
 ### Portable ZIP
 
-Extract `TextureFlow-0.2.0-Portable-win-x64.zip` completely, then run `TextureFlow.exe`. Keep the `UnityPackage` directory beside the executable. Running directly inside the ZIP, or copying only the EXE, can prevent companion setup.
+Extract `TextureFlow-0.3.0-Portable-win-x64.zip` completely, then run `TextureFlow.exe`. Keep the `UnityPackage` directory beside the executable. Running directly inside the ZIP, or copying only the EXE, can prevent companion setup.
 
 ```text
 TextureFlow.exe
@@ -93,7 +96,7 @@ The project was deliberately moved out of the unrelated Arma workspace. Its home
 A:\VRChat Texture Flow
 ```
 
-Source is under `src`, the companion under `UnityPackage`, and downloads under `build\releases`. The local portable EXE is `build\portable\TextureFlow.exe`. A `Texture Flow.lnk` shortcut at the root points to it. Other creators do not need this drive or directory structure.
+Source is under `src`, the companion under `UnityPackage`, and downloads under `build\releases`. The local portable EXE is `build\portable\TextureFlow.exe`. A `Texture Flow.lnk` shortcut at the root points to the latest local build; a staged release may live in a different build subfolder. Other creators do not need this drive or directory structure.
 
 ### Updating
 
@@ -104,7 +107,7 @@ Use the app-managed companion. A second manual copy can cause duplicate editor c
 ## 4. First test: the included demo
 
 1. Open the app and click **Try the demo**.
-2. The app switches to **2 Effect**. The stripe is already selected and the pattern should move inside it.
+2. The app switches to **2 Effect**. The stripe and badge already have different moving textures. Select either area row to edit its settings.
 3. Try the direction and speed buttons. The outline should stay fixed.
 4. Use **Show original** to compare, then turn it off.
 5. For a Unity test, create a temporary cube in a disposable scene/project. The connector lists ordinary cubes as well as avatar parts.
@@ -138,9 +141,9 @@ Use **Choose project folder** if a project is missing. Select the root containin
 
 ### Original and moving textures
 
-**Open original avatar texture** loads the actual image used by the material, not a screenshot of the avatar. Loading a different original replaces the selection mask and clears its undo history.
+**Open original avatar texture** loads the actual image used by the material, not a screenshot of the avatar. Loading a different original starts a fresh area workspace and clears existing area masks/history. Save work first if you want to retain the previous workspace.
 
-**Open moving texture** chooses the image that moves inside the selection. A seamless pattern hides repeating edges better. It may have different dimensions from the original.
+**Open moving texture for selected area** chooses the image that moves inside the currently selected area. In Effect, **Choose moving image for THIS area** replaces only that area's image and keeps its mask; **Add next area** starts an independent empty area. A seamless pattern hides repeating edges better. It may have different dimensions from the original.
 
 ### Browse its textures
 
@@ -173,9 +176,27 @@ The source application must expose a Windows file/path drag payload. Texture Flo
 
 ## 7. Tab 2: Effect
 
+### Create several independent areas
+
+1. Select **Area 1**, fill its color/region, then refine it with **Paint add** and **Paint erase**. These tools operate on the same mask; changing tools does not clear it.
+2. Click **Choose moving image for THIS area** and choose its pattern. Set its direction, speed, glow and tint.
+3. Click **Add next area**. The previous area is retained and continues to preview. Select a new color or part and give it another image/settings.
+4. Repeat for a third area, up to eight. Click any existing row to edit that area's mask, image or settings again. There is no destructive "finish" step.
+5. Create & Apply combines all enabled, completed areas into one material for the chosen avatar slot.
+
+Rename an area in the field below the list. Its checkbox controls whether it appears in preview **and export**. **Duplicate** copies its mask/settings independently. **Remove** affects the selected area; **Restore removed area**, under **More area actions**, recovers the most recently removed area. If the list is already full, remove an unused area before restoring another.
+
+**Move earlier/later** changes overlap priority: later rows cover earlier rows where masks overlap. Nonoverlapping regions remain independent. **Add moving image as NEW area**, under More area actions, creates an area with that image and an empty mask. Brush/cleanup settings are editing tools; motion/tint belong to each area.
+
+A totally empty draft area is ignored when exporting completed areas. An enabled area with only a mask or only an image reports what is missing; finish it, disable it, or remove it. Hidden areas are retained in saved work.
+
+![Two independent demo areas with separate images](docs/Multi-area-demo.png)
+
+The demo stripe and badge use different patterns and speeds. Choose an area row to return to it without losing the other region. Use Show original while selecting if existing animated areas obscure the source colors.
+
 ### Select the stripe
 
-The default is **Select connected color (magic wand)**. Click inside the stripe. Increase **Include similar shades** to include neighboring dark gray with black. If unwanted areas join the selection, Undo and try a smaller tolerance.
+The default is **Select connected color (magic wand)**. **Fill color**, **Paint add** and **Paint erase** are visible shortcuts; the current shortcut is highlighted. **Add to this area's selection** is the default selection mode, so further color fills expand the mask. Choose Replace to start its mask again or Remove to subtract matching pixels. Shift-click adds and Alt-click subtracts with color/outline tools. Click inside the stripe. Increase **Include similar shades** to include neighboring dark gray with black. If unwanted areas join the selection, Undo and try a smaller tolerance.
 
 | Tool | Behavior |
 | --- | --- |
@@ -193,7 +214,7 @@ Color tolerance is 0–255 and compares the largest difference among RGB channel
 
 | Control | Behavior/range |
 | --- | --- |
-| Keep previous selection when clicking | Adds the new clicked/outlined region instead of replacing the prior mask |
+| Selection mode (visible above the tool list) | Add, Replace or Remove for fills/outlines; changing to a brush retains the mask |
 | Hue tolerance | 0–180 degrees around the clicked hue |
 | Saturation / brightness tolerance | Each 0–1 |
 | Brush size | 1–512 source pixels in diameter |
@@ -203,10 +224,10 @@ Color tolerance is 0–255 and compares the largest difference among RGB channel
 | Soften edges | Box feather producing gray mask edges |
 | Smooth | Morphological opening; removes noise/protrusions and can remove small selected details |
 | Fill gaps | Fills enclosed holes, not only tiny holes |
-| Undo selection | Up to four retained whole-mask states |
+| Undo selection / Redo | Up to four retained states per area, subject to a shared 256 MiB history budget |
 | Clear selection | Clears the mask; selection Undo can normally recover the previous state |
 
-Cleanup changes the mask, not the source image. Start with a small radius, particularly around fine artwork.
+Cleanup changes only the selected area's mask, not the source image or other areas. Ctrl+Z undoes the active area's mask; Ctrl+Y or Ctrl+Shift+Z redoes it. Text fields keep their normal text-editing shortcuts. Large workspaces may have older histories trimmed to stay within the memory budget. Start with a small radius, particularly around fine artwork.
 
 ### Movement and glow
 
@@ -219,10 +240,10 @@ Cleanup changes the mask, not the source image. Start with a small radius, parti
 | Repeat X / Y | Each 0.01–1000 |
 | Rotation | Static pattern rotation, 0–360 degrees |
 | Glow strength | 0–100 |
-| Glow color | Hex, for example `#40DFFF` |
+| Pattern tint | Hex; default `#FFFFFF` keeps the moving image's colors |
 | Extra HDR brightness | -10 to 16 stops; emission multiplies by 2 to this power |
 
-Up means texture-preview up, not world up. UV layouts can rotate/mirror the image on the model; inspect in Unity and adjust direction if needed. Glow strength zero removes extra emission but still leaves the moving pattern as surface color. Start with strength 2 and HDR 0; high values can wash out detail.
+Up means texture-preview up, not world up. UV layouts can rotate/mirror the image on the model; inspect in Unity and adjust direction if needed. Glow strength zero removes extra emission but still leaves the moving pattern as surface color. The Pattern tint colors the entire moving image, not only its emission. New areas start white; old saved work retains its original tint, including any cyan tint chosen by older releases. Start with strength 2 and HDR 0; high values can wash out detail.
 
 ### Preview controls
 
@@ -250,12 +271,12 @@ Check the avatar hierarchy, part and slot. A unique original-texture match can b
 
 ### Create & Apply
 
-After selecting an image region and intended target, the button:
+After preparing the enabled areas and selecting an intended target, the button:
 
 1. Checks images, selection, connection and target information.
-2. Creates a new export containing images, mask and settings.
+2. Creates a new export containing separate images, masks and settings for every enabled, completed area.
 3. Waits for Unity to create the animated material.
-4. Requests assignment of `Animated.mat` to that one slot.
+4. Requests assignment of `Animated.mat`, containing all the enabled areas, to that one slot.
 5. Waits for Unity's response and displays success or the reason it stopped.
 6. Records the previous reference and a material snapshot for restoration.
 
@@ -269,7 +290,7 @@ Expand **Save files without applying** and choose **Create Unity material only**
 
 ## 9. Restore and recover an earlier look
 
-Select the same project, connect, and click **Restore previous material** to reverse the latest recorded app assignment. Save the scene afterward if you want to keep the restored state. Unity Undo/Redo also works; that history is not a permanent backup.
+Select the same project, connect, and click **Restore previous material** to reverse the latest recorded app assignment. This restores the whole material assignment, including its combined areas; use desktop selection Undo to fix an individual mask instead. Save the scene afterward if you want to keep the restored state. Unity Undo/Redo also works; that history is not a permanent backup.
 
 Each application records what occupied the slot immediately before it. After several applications, the most recent previous material may itself be an older generated effect. Restore handles the latest recorded step, not an unlimited chain back to the avatar's original look.
 
@@ -287,7 +308,7 @@ Across Unity restarts, restoration needs the original saved scene and object ope
 
 ## 10. Save, reopen and share work
 
-**Save work** requires both original and moving textures. It creates:
+**Save work** requires an original texture and stores every area, including disabled or unfinished ones. It creates:
 
 ```text
 Shoe Energy.tflow
@@ -297,9 +318,13 @@ Shoe Energy.tflow.assets/
   mask.png
   cutout.png
   session.json
+  layer-01/mask.png
+  layer-01/flow.png
+  layer-02/mask.png
+  layer-02/flow.png
 ```
 
-Keep the file and adjacent folder together. The session uses a relative assets-folder name. The mask remains editable after reopening. Loading rejects assets outside the session's containing directory.
+Each area's moving image is present when loaded; incomplete drafts can omit it. Root mask/cutout describe the enabled combined regions, and the root flow is a first-image compatibility copy. Schema-1 single-area work from version 0.2 can be opened by 0.3, but 0.2 cannot open new schema-2 multi-area work. Keep the file and adjacent folder together. The session uses a relative assets-folder name. The mask remains editable after reopening. Loading rejects assets outside the session's containing directory.
 
 Renderer connections are not portable session data: reconnect and choose the intended target in the recipient's project. Saving over the same name updates its saved assets; use a new name for a separate version.
 
@@ -323,6 +348,10 @@ Assets/TextureFlow/
       mask.png
       cutout.png
       session.json
+      layer-01/mask.png
+      layer-01/flow.png
+      layer-02/mask.png
+      layer-02/flow.png
       flow-request.json
       flow-result.json
       Animated.mat
@@ -336,7 +365,7 @@ Unity adds `.meta` files. Preserve them when moving assets so their references r
 | File | Purpose |
 | --- | --- |
 | base.png / flow.png | Exported original and moving images |
-| mask.png | Fixed grayscale selection: white enables the effect |
+| mask.png | Combined enabled-area mask for cutout/reference; each layer folder contains its independent fixed mask |
 | cutout.png | Original image with alpha reduced in selected areas |
 | session.json | Effect configuration |
 | flow-request.json | Material-creation request |
@@ -360,7 +389,7 @@ Library files are local connection/cache state, not avatar assets. Exported asse
 
 ## 12. Poiyomi, lilToon and appearance limits
 
-The Advanced shader choice affects optional native exports. `Animated.mat` is always generated with the included shader and is used by **Create & Apply**. Selecting a native shader does not cause that button to assign `Native.mat`.
+The Advanced shader choice affects optional native exports. `Animated.mat` is always generated with the included shader and is used by **Create & Apply**. Selecting a native shader does not cause that button to assign `Native.mat`. Native exports are single-area only; multi-area exports use the included shader and report this in the import result.
 
 Native adapters attempt emission, masks, pan and tiling through installed properties. Missing shaders/properties or unsupported native rotation are reported in `flow-result.json`. The standard material remains available. Cross-version appearance, locking/build stripping and VRChat upload behavior of native adapters have not been comprehensively validated.
 
@@ -377,6 +406,10 @@ Desktop brightness does not guarantee a bloom halo in a world. World lighting, p
 | VCC card will not drag | Use the detected project list or drag from Explorer; the card may not provide a drag payload |
 | Browser empty | Check project, clear search, enable package textures; generated/serialized textures are not ordinary image results |
 | Thumbnail error | Try another file; check whether it opens elsewhere; retain the error message |
+| A second image replaces the first | Select Add next area or Add moving image as NEW area; choosing an image for THIS area intentionally replaces that one image |
+| Cannot refine a filled selection | Select the existing area row; use Paint add/erase. Keep Add mode for additional fills; changing tools keeps the mask |
+| Image is tinted blue | Set this area's Pattern tint to #FFFFFF; old saved work retains its earlier tint |
+| An area disappears | Check its enable checkbox and overlap order; a later opaque mask can cover an earlier one |
 | Selection includes unwanted gray/black | Undo, lower tolerance and use add/remove brushes |
 | Disconnected black regions selected | Choose connected-color rather than whole-image color selection |
 | Overlay obscures effect | Turn off Highlight selected area |
@@ -438,7 +471,7 @@ Clearing Library forces reimport and removes local connection state, including t
 The original product wish list is not a completed feature list:
 
 - No AI-assisted subject/object selection. Simplifying the UI did not introduce an AI engine.
-- No freely reorderable Photoshop-style layer stack.
+- The independent effect areas can be reordered, but this is not a general Photoshop-style editor with arbitrary image layer types.
 - No rainbow/pulse modes or named energy/lava/fire/water preset library.
 - No pressure input or emission color-picker dialog; color is hex input.
 - No synchronized 3D desktop avatar preview or continuous parameter streaming to Unity.
@@ -450,15 +483,16 @@ The original product wish list is not a completed feature list:
 - 8-bit editing/export does not retain all HDR/PSD authoring information.
 - Large-image painting, export throughput and sustained 60 FPS are not comprehensively benchmarked.
 
-The preview samples at most 640 pixels in width. Its timer targets roughly 16 ms, but composition runs on the UI thread and 60 FPS is not guaranteed. Large source arrays, masks and undo states can use over 1 GB. An 8192-square grow operation took roughly 0.5–0.8 seconds in recorded development runs; this is a local observation, not a hardware guarantee.
+The preview samples at most 640 pixels in width. Its timer targets roughly 16 ms, but composition runs on the UI thread and 60 FPS is not guaranteed. Large source arrays, multiple masks/images and undo states can use substantially more than 1 GB. Up to four undo states per area share a 256 MiB history budget; eight simultaneous 8192-square workflows are not performance-certified. An 8192-square grow operation took roughly 0.5–0.8 seconds in recorded development runs; this is a local observation, not a hardware guarantee.
 
-## 17. Verification record for 0.2.0
+## 17. Verification record for 0.3.0
 
 Recorded successful checks:
 
-- **46 desktop checks:** selection, cleanup, source preservation, export, codecs, drag data, thumbnails/search, three-step UI, connection/ambiguity/expiry/busy handling and 8192-square masks.
-- **27 Unity checks:** shader/material/mask/velocity, readable targets, exact-slot apply, other-slot preservation, backups, Undo/Redo, restore, replay handling, stale identities/sessions/materials, expiry, restricted paths, saved-scene recovery, file commands and Play-mode refusal.
-- **Two live integration checks:** actual desktop Create & Apply and Restore actions communicated with a running disposable Unity 2022.3.22f1 editor; the original material GUID was restored.
+- **71 desktop checks:** selection, cleanup, source preservation, export, codecs, drag data, thumbnails/search, three-step UI, connection/ambiguity/expiry/busy handling, 8192-square masks, fill-to-brush refinement, add/subtract masks, independent areas/settings, duplication/removal, multi-area saving/export, disabled/draft handling and legacy sessions.
+- **35 Unity checks:** shader/material/mask/velocity, readable targets, exact-slot apply, other-slot preservation, backups, Undo/Redo, restore, replay handling, stale identities/sessions/materials, expiry, restricted paths, saved-scene recovery, file commands, Play-mode refusal, multi-area material count/textures/velocities/tints, fixed second masks and legacy imports.
+- **GPU rendering check:** Direct3D11 output verified independent red/green regions, untouched original pixels, overlap priority, disabled areas and full eight-area shader compilation.
+- **Two live integration checks:** actual desktop Create & Apply with two independently animated areas and Restore actions communicated with a running disposable Unity 2022.3.22f1 editor; the original material GUID was restored.
 
 Packaged EXE startup/version and correspondence between packaged companion and tested source were checked. These tests do not prove every avatar's visual appearance, every native shader version or a VRChat upload.
 
@@ -468,12 +502,15 @@ Ordinary ownership does not require the following developer details. They are in
 
 ```text
 src/TextureFlow/
-  TextureFlow.csproj          .NET 9 Windows WPF, app 0.2.0
+  TextureFlow.csproj          .NET 9 Windows WPF, app 0.3.0
   App.xaml / App.xaml.cs      Application entry
   MainWindow.xaml            Three-step UI and named controls
   MainWindow.xaml.cs         Selection, preview, sessions, export entry
   MainWindow.Import.cs       Texture browser and file/path drops
   MainWindow.Unity.cs        Connection, target choice, apply/restore
+  MainWindow.Effects.cs      Independent area state, switching, tools, undo/redo
+  LayerCompositor.cs         Multi-area desktop composition
+  WorkspaceFiles.cs          Versioned sessions/export and validation
   Imaging.cs                 Raster arrays, masks, FlowSettings
   ProjectTextures.cs         Project lookup, scan and decode
   TextureBrowser.xaml[.cs]   Virtualized browser
@@ -496,7 +533,7 @@ On the development machine use `A:\VRChat Texture Flow`, not the old Arma direct
 
 The project targets `net9.0-windows` and publishes self-contained for `win-x64`. Magick.NET-Q8-x64 15.0.0 decodes images; WPF bitmap APIs support preview/PNG output. Dependency notices ship with releases.
 
-Source rasters are BGRA byte arrays; the mask is a separate byte per pixel. Four whole-mask undo copies are retained. Large selection/cleanup operations use workers; preview composition is currently on the UI thread.
+Source rasters are BGRA byte arrays; the mask is a separate byte per pixel. Up to four mask undo states per area are retained within a shared 256 MiB history budget. Area image/mask/motion state survives switching; the active fields are synchronized before switching, saving, exporting and rendering. Large selection/cleanup operations use workers; preview composition is currently on the UI thread.
 
 The browser scans asynchronously with a virtualized list and two concurrent thumbnail decoders. Visible-row references are released on unload. Package-cache enumeration consults dependency metadata to avoid indiscriminately listing stale cached versions.
 
@@ -504,7 +541,9 @@ The browser scans asynchronously with a virtualized list and two concurrent thum
 
 The desktop writes flow-request.json after export/companion files. The importer processes pending requests, imports the mask as linear/clamped data and the flow image as repeating color data, and creates Animated.mat. Material creation and scene assignment have separate result files. Request/result timestamps determine pending import work.
 
-The fallback shader samples a fixed mask and separately samples the pattern with time-based pan, repetition and rotation. Emission is tinted/masked. It is an opaque Built-in surface shader, not a universal preservation layer for original shaders.
+The fallback shader supports up to eight independent mask/pattern pairs. It shares flow and mask sampler states on Direct3D11, with shader target 4.0. Later areas blend over earlier albedo and emission at overlaps. Each pattern has its own time-based velocity, repetition, rotation, tint and emission. Emission is tinted/masked. It is an opaque Built-in surface shader, not a universal preservation layer for original shaders.
+
+Session/export **schema 2** stores an array of area records containing names, enable state, relative image/mask paths and motion settings. The reader/importer still accepts legacy schema 1. Validate area count, settings, mask dimensions and relative paths before replacing a workspace or modifying imports. Blank drafts can be saved; only enabled, completed areas enter an export.
 
 ### Connection and commands
 
@@ -543,6 +582,7 @@ Set-Location 'A:\VRChat Texture Flow'
 dotnet build .\src\TextureFlow -c Release
 dotnet run --project .\tests -c Release -- 'A:/VRChat Texture Flow/build/desktop-test'
 .\tests\Run-UnitySmoke.ps1
+.\tests\Run-LayerRender.ps1
 .\tests\Run-LiveApply.ps1
 .\Build.ps1 -InnoCompiler 'A:/VRChat Texture Flow/tools/InnoSetup/ISCC.exe'
 ```
@@ -568,7 +608,7 @@ build/unity-apply-test/live-apply-result.txt
 build/unity-apply-test/live-unity.log
 ```
 
-The live harness starts/stops its own hidden batch Unity process. Do not attach it to the user's active avatar project.
+The GPU render harness needs a working Direct3D11 GPU and runs without -nographics. The normal smoke suite is headless. The live harness starts/stops its own hidden batch Unity process. Do not attach it to the user's active avatar project.
 
 ### When a developer or assistant is stuck
 
@@ -588,11 +628,11 @@ A moved test project's old Library/Bee cache once failed to include a new script
 
 The owner requested a dedicated, shareable Windows scrolling-emissive-mask creator: independent of Unity as an application, with minimal masking work and no manual Photoshop/code work. The owner approved automatic updates of **Texture Flow's own companion inside selected projects**, while leaving VCC/Unity installations unchanged.
 
-The source/build home is a new top-level A-drive directory. The provided pixel-art image is embedded in the EXE, windows/taskbar and installer. The simplified interface has three tabs. Automatic assignment must remain target-specific and recoverable rather than guessing among avatars.
+The source/build home is a new top-level A-drive directory. The provided pixel-art image is embedded in the EXE, windows/taskbar and installer. The simplified interface has three tabs. Version 0.3 adds independently editable areas, additive fills, visible brush shortcuts, per-area undo/redo, multi-area save/export and neutral white default tint. Automatic assignment must remain target-specific and recoverable rather than guessing among avatars.
 
 The original wish list remains a roadmap, not a completed feature list. Valuable next work includes preserving more original material features, validating native adapters, improving large-image preview performance, clearer original-texture provenance in sessions and stronger setup diagnostics. AI selection and section 16's other unfinished features remain future work.
 
-This handbook describes version 0.2.0. Update its version, tests, protocol and limits when the product changes.
+This handbook describes version 0.3.0. Update its version, tests, protocol and limits when the product changes.
 
 ## 21. References and glossary
 
@@ -604,6 +644,7 @@ Primary references for adjacent tools:
 - [Poiyomi emission](https://www.poiyomi.com/10.0/special-fx/emission)
 - [lilToon emission](https://lilxyzw.github.io/lilToon/ja_JP/color/emission.html)
 - [Magick.NET](https://github.com/dlemstra/Magick.NET)
+- [Unity sampler-state sharing](https://docs.unity.cn/jp/2022.3/Manual/SL-SamplerStates.html)
 
 App source/tests determine its own behavior. External shader documentation does not turn an experimental adapter into validated support.
 

@@ -4,13 +4,13 @@
 [Setup]
 AppId={{D3CA4B46-48CA-4D9B-8A9A-72A0D72BF116}
 AppName=Texture Flow for VRChat
-AppVersion=0.2.0
+AppVersion=0.3.0
 DefaultDirName={localappdata}\Programs\TextureFlow
 DefaultGroupName=Texture Flow
 PrivilegesRequired=lowest
 OutputDir=build\releases
 SetupIconFile=src\TextureFlow\Assets\AppIcon.ico
-OutputBaseFilename=TextureFlow-0.2.0-Setup
+OutputBaseFilename=TextureFlow-0.3.0-Setup
 Compression=lzma2
 SolidCompression=yes
 ArchitecturesAllowed=x64compatible

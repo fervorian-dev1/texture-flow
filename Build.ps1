@@ -12,7 +12,7 @@ Get-ChildItem -LiteralPath $projectRoot -Filter 'T.A.R.D. Manual.*' -File | Wher
 New-Item -ItemType Directory -Force "$portable/Licenses" | Out-Null
 Copy-Item "$projectRoot/Licenses/*" "$portable/Licenses" -Recurse -Force
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$archive=Join-Path $release 'TextureFlow-0.2.0-Portable-win-x64.zip'
+$archive=Join-Path $release 'TextureFlow-0.3.0-Portable-win-x64.zip'
 $temporaryArchive=$archive+'.tmp-'+[Guid]::NewGuid().ToString('N')
 [IO.Compression.ZipFile]::CreateFromDirectory($portable,$temporaryArchive,[IO.Compression.CompressionLevel]::Optimal,$false)
 Move-Item -LiteralPath $temporaryArchive -Destination $archive -Force

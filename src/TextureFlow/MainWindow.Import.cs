@@ -41,8 +41,8 @@ public partial class MainWindow
     {
         var raster = await Task.Run(() => Raster.Load(path));
         string? project = ProjectTextures.FindProject(path);
-        if (project != null) SelectProject(project);
-        if (asFlow) flow = raster;
+        if (project != null && (!asFlow || SelectedProject==null)) SelectProject(project);
+        if (asFlow) SetMovingTexture(raster,Path.GetFileName(path));
         else { SetImage(raster);sourceTexturePath=Path.GetFullPath(path);lastConnectionSignature=""; }
         if(asFlow)FlowLabel.Text=Path.GetFileName(path);else BaseLabel.Text=Path.GetFileName(path);
         RefreshConnection();
@@ -60,7 +60,7 @@ public partial class MainWindow
             // Decode both before replacing either layer, so a failed second image leaves the session intact.
             var first = await Task.Run(() => Raster.Load(textures[0]));
             var second = await Task.Run(() => Raster.Load(textures[1]));
-            SetImage(first); flow = second;sourceTexturePath=Path.GetFullPath(textures[0]);BaseLabel.Text=Path.GetFileName(textures[0]);FlowLabel.Text=Path.GetFileName(textures[1]);lastConnectionSignature="";
+            SetImage(first); SetMovingTexture(second,Path.GetFileName(textures[1]));sourceTexturePath=Path.GetFullPath(textures[0]);BaseLabel.Text=Path.GetFileName(textures[0]);FlowLabel.Text=Path.GetFileName(textures[1]);lastConnectionSignature="";
             var root = ProjectTextures.FindProject(textures[0]);
             if (root != null) SelectProject(root);
             Status.Text = $"Loaded base: {Path.GetFileName(textures[0])} • animation: {Path.GetFileName(textures[1])}";

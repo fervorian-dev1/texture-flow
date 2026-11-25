@@ -131,11 +131,11 @@ public partial class MainWindow
  });
  public async Task<string> ExportAssetsAsync(string project,FlowSettings settings)
  {
-  Check();if(flow==null)throw new IOException("Open a moving texture in step 1.");
+  var workspace=CaptureWorkspace(true);
   string name="Flow-"+DateTime.Now.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")[..6];
   string directory=Path.Combine(project,"Assets/TextureFlow/Exports",name);
   await InstallCompanionAsync(project);
-  await Task.Run(()=>{Directory.CreateDirectory(directory);WriteAssets(directory,settings);WriteJsonAtomic(Path.Combine(directory,"flow-request.json"),settings);});
+  await Task.Run(()=>{var configuration=WorkspaceFiles.Write(directory,workspace,true);WriteJsonAtomic(Path.Combine(directory,"flow-request.json"),configuration);});
   return directory;
  }
  static void WriteJsonAtomic(string path,object value)
@@ -170,8 +170,7 @@ public partial class MainWindow
  }
  async void CreateAndApply(object sender,RoutedEventArgs e)=>await Work(async()=>
  {
-  Check();if(flow==null)throw new IOException("Open a moving texture first.");
-  if(!mask.Any(value=>value>0))throw new IOException("Click the stripe or paint an area in step 2 before applying.");
+  _=CaptureWorkspace(true);
   string project=SelectedProject??throw new IOException("Choose your Unity project in step 1.");
   var requested=Targets.SelectedItem as AvatarTarget;
   Status.Text="Connecting and checking the chosen avatar part…";
