@@ -8,6 +8,10 @@ New-Item -ItemType Directory -Force $portable,$release | Out-Null
 dotnet publish "$projectRoot/src/TextureFlow/TextureFlow.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o $portable
 if($LASTEXITCODE -ne 0){throw 'Publish failed'}
 Copy-Item "$projectRoot/README.md" "$portable/README.md" -Force
+if(Test-Path -LiteralPath "$projectRoot/docs"){
+ New-Item -ItemType Directory -Force "$portable/docs" | Out-Null
+ Copy-Item "$projectRoot/docs/*" "$portable/docs" -Recurse -Force
+}
 Get-ChildItem -LiteralPath $projectRoot -Filter 'T.A.R.D. Manual.*' -File | Where-Object Extension -In '.md','.html','.pdf' | Copy-Item -Destination $portable -Force
 New-Item -ItemType Directory -Force "$portable/Licenses" | Out-Null
 Copy-Item "$projectRoot/Licenses/*" "$portable/Licenses" -Recurse -Force
