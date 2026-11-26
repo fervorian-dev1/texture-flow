@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="TextureFlow.SkyboxVoidTab" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:TextureFlow" Background="#151923" Foreground="#E8EDF7">
+ <UserControl.Resources>
+  <local:ProjectNameConverter x:Key="ProjectName"/>
+  <Style TargetType="TextBlock"><Setter Property="Margin" Value="4"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+  <Style TargetType="Button"><Setter Property="Margin" Value="4"/><Setter Property="Padding" Value="12,9"/><Setter Property="Foreground" Value="#182030"/></Style>
+  <Style TargetType="TextBox"><Setter Property="Margin" Value="4"/><Setter Property="Padding" Value="6"/><Setter Property="Foreground" Value="#182030"/></Style>
+  <Style TargetType="ComboBox"><Setter Property="Margin" Value="4"/><Setter Property="Padding" Value="6"/><Setter Property="Foreground" Value="#182030"/></Style>
+  <Style TargetType="CheckBox"><Setter Property="Margin" Value="5"/><Setter Property="Foreground" Value="#E8EDF7"/></Style>
+ </UserControl.Resources>
+ <DockPanel Margin="16">
+  <StackPanel DockPanel.Dock="Top"><DockPanel><WrapPanel DockPanel.Dock="Right"><Button Content="Open guide" Click="OpenGuide"/><Button Content="Show me an example" Click="Example"/><Button Content="Save sky work" Click="Save"/><Button Content="Open sky work" Click="Open"/></WrapPanel><StackPanel><TextBlock Text="A LITTLE WINDOW INTO SPACE" FontSize="24" FontWeight="Bold"/><TextBlock Text="We keep your picture, paint an opening, and put a moving sky behind it." Foreground="#AFC0D8"/></StackPanel></DockPanel></StackPanel>
+  <Border DockPanel.Dock="Bottom" Background="#25364E" Padding="9" Margin="4,10,4,0"><TextBlock x:Name="Message" Text="Start at 1 Picture. Or click Show me an example to try it without an avatar."/></Border>
+  <Grid x:Name="WorkPanel"><Grid.ColumnDefinitions><ColumnDefinition Width="420"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <TabControl x:Name="GuideSteps" Background="#151923" BorderBrush="#52647F" Foreground="#182030" Margin="0,8,10,0">
+    <TabItem Header="1 Picture"><ScrollViewer VerticalScrollBarVisibility="Auto" Foreground="#E8EDF7"><StackPanel Margin="7">
+     <TextBlock Text="1. Pick the picture on your avatar" FontSize="19" FontWeight="Bold"/>
+     <TextBlock Text="Think of this as the paper we will cut a window into. Your original file stays safe."/>
+     <TextBlock Text="Which Unity project has your avatar?"/><ComboBox x:Name="ProjectsChoice" SelectionChanged="ProjectChanged"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Converter={StaticResource ProjectName}}" ToolTip="{Binding}"/></DataTemplate></ComboBox.ItemTemplate></ComboBox><Button Content="Find my project folder..." Click="ProjectFolder"/>
+     <Button Content="Choose my avatar picture..." Click="OriginalFile"/><Button Content="Find its picture in this project..." Click="BrowseOriginal"/><TextBlock x:Name="OriginalState" Text="No avatar picture yet." Foreground="#AFC0D8"/>
+     <Button Content="Copy my current scrolling work" Click="CopyScrolling"/><TextBlock Text="Copy makes a separate workspace here. Your scrolling tab keeps its own work." Foreground="#AFC0D8"/>
+     <Button Content="Next: paint the opening" Tag="1" Click="Next" Background="#63D9CA"/>
+    </StackPanel></ScrollViewer></TabItem>
+    <TabItem Header="2 Opening"><ScrollViewer VerticalScrollBarVisibility="Auto" Foreground="#E8EDF7"><StackPanel Margin="7">
+     <TextBlock Text="2. Tell us where to look inside" FontSize="19" FontWeight="Bold"/><TextBlock Text="Only the painted part becomes a sky or void. Everything outside that opening keeps your picture."/>
+     <TextBlock Text="Which opening are you editing?"/><ComboBox x:Name="Areas" DisplayMemberPath="Name" SelectionChanged="AreaChanged"/>
+     <Button Content="Paint my opening..." Click="PaintOpening" Background="#63D9CA"/><TextBlock Text="In the painting window: click Fill color, click the part you want, then use Paint add or Paint erase to fix its edges. Click Done when it looks right."/>
+     <Button Content="Use the whole picture as the opening" Click="WholeOpening"/><TextBlock Text="Whole picture makes the entire chosen material a space window. Paint is better for a stripe, badge or small part." Foreground="#AFC0D8"/>
+     <TextBlock x:Name="OpeningState" Text="No opening painted yet." Foreground="#AFC0D8"/>
+     <Button Content="Next: choose what is inside" Tag="2" Click="Next" Background="#63D9CA"/>
+    </StackPanel></ScrollViewer></TabItem>
+    <TabItem Header="3 Look"><ScrollViewer VerticalScrollBarVisibility="Auto" Foreground="#E8EDF7"><StackPanel Margin="7">
+     <TextBlock Text="3. Put something inside the window" FontSize="19" FontWeight="Bold"/><TextBlock Text="Choose the opening in step 2 first. Each opening can have its own picture and look."/>
+     <Button Content="Use ready-made stars" Click="Stars" Background="#63D9CA"/><Button Content="Choose my own sky / inside picture..." Click="SkyFile"/><Button Content="Find an inside picture in my project..." Click="BrowseSky"/><TextBlock x:Name="SkyState" Text="No inside picture yet." Foreground="#AFC0D8"/>
+     <TextBlock Text="What should it feel like?" FontWeight="Bold"/><ComboBox x:Name="StyleChoice" SelectedIndex="0" SelectionChanged="PresetChanged"><ComboBoxItem Content="Sky window - a huge sky far away"/><ComboBoxItem Content="Deep void - stars at different depths"/><ComboBoxItem Content="Twisting tunnel - a path into darkness"/></ComboBox>
+     <TextBlock x:Name="StyleHelp" Text="Sky window changes what you see when you move your head, like looking out of a window." Foreground="#AFC0D8"/>
+     <TextBlock Text="How fast should the picture turn? (0 = still)"/><Slider x:Name="Turn" Minimum="-45" Maximum="45" Value="3" ValueChanged="LookChanged" ToolTip="Degrees per second. Negative turns the other way."/><TextBlock Text="{Binding ElementName=Turn, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+     <TextBlock Text="How deep should it feel? (void and tunnel)"/><Slider x:Name="Depth" Minimum="0.05" Maximum="2" Value="0.6" ValueChanged="LookChanged"/><TextBlock Text="{Binding ElementName=Depth, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+     <TextBlock Text="How bright should it be?"/><Slider x:Name="Brightness" Minimum="0" Maximum="8" Value="1" ValueChanged="LookChanged"/><TextBlock Text="{Binding ElementName=Brightness, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+     <Expander Header="More look controls" Foreground="#C4D2E8" Margin="4,10"><StackPanel>
+      <TextBlock Text="Depth layers: more pictures make more depth, but more work for the computer. Start with 4."/><Slider x:Name="Layers" Minimum="1" Maximum="8" Value="4" IsSnapToTickEnabled="True" TickFrequency="1" ValueChanged="LookChanged"/><TextBlock Text="{Binding ElementName=Layers, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+      <TextBlock Text="Pattern repeats (void and tunnel)"/><Slider x:Name="Repeat" Minimum="0.1" Maximum="8" Value="1" ValueChanged="LookChanged"/><TextBlock Text="{Binding ElementName=Repeat, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+      <TextBlock Text="Pattern drift (void and tunnel; 0 = no drift)"/><Slider x:Name="Drift" Minimum="-0.2" Maximum="0.2" Value="0.02" ValueChanged="LookChanged"/><TextBlock Text="{Binding ElementName=Drift, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+      <TextBlock Text="Starting turn"/><Slider x:Name="StartTurn" Minimum="0" Maximum="360" Value="0" ValueChanged="LookChanged"/><TextBlock Text="{Binding ElementName=StartTurn, Path=Value, StringFormat={}{0:0.###}}" Foreground="#AFC0D8" HorizontalAlignment="Right"/>
+      <TextBlock Text="Tint: #FFFFFF keeps the picture's colors"/><TextBox x:Name="Tint" Text="#FFFFFF" TextChanged="TintChanged"/>
+      <CheckBox x:Name="WorldStill" Content="Keep the sky still when my avatar turns" IsChecked="True" Click="LookChanged"/><TextBlock Text="This matters in Unity when the avatar turns. The preview uses a still test panel." Foreground="#AFC0D8"/>
+     </StackPanel></Expander>
+     <TextBlock Text="A 360-degree sky picture (usually twice as wide as tall) works best for Sky window. An ordinary pattern works well for void or tunnel. Pure black looks flat; stars or clouds show the depth." Foreground="#AFC0D8"/>
+     <Button Content="Next: put it on my avatar" Tag="3" Click="Next" Background="#63D9CA"/>
+    </StackPanel></ScrollViewer></TabItem>
+    <TabItem Header="4 Apply"><ScrollViewer VerticalScrollBarVisibility="Auto" Foreground="#E8EDF7"><StackPanel Margin="7">
+     <TextBlock Text="4. Put the window on your avatar" FontSize="19" FontWeight="Bold"/><TextBlock Text="Open this project in Unity. Open the scene with your avatar. Leave Unity's Play mode off."/>
+     <Button Content="Connect and find my avatar parts" Click="Connect"/><TextBlock x:Name="ConnectionState" Text="The included connector sets itself up. No code editing is needed." Foreground="#AFC0D8"/>
+     <TextBlock Text="Which part should change? Check the avatar name and material slot."/><ComboBox x:Name="Targets" DisplayMemberPath="label" SelectionChanged="TargetChanged"/>
+     <Button x:Name="ApplyButton" Content="Create and apply my sky / void" Click="Apply" Padding="12" FontSize="16" FontWeight="Bold" Background="#63D9CA"/>
+     <Button x:Name="RestoreButton" Content="Undo my last sky / void material change" Click="Restore" IsEnabled="False"/>
+     <TextBlock Text="After it says Applied, save the scene in Unity (Ctrl+S). This does not upload an avatar or change the world's sky. It replaces the one material slot you choose; its old shading can look different." Foreground="#AFC0D8"/>
+     <Expander Header="Only create files, without changing the avatar" Foreground="#C4D2E8" Margin="4,10"><Button Content="Create sky / void material files only" Click="ExportOnly"/></Expander>
+     <TextBlock Text="Undo material change restores the last assigned material. To fix painted pixels, use Undo selection in the painting window instead." Foreground="#AFC0D8"/>
+    </StackPanel></ScrollViewer></TabItem>
+   </TabControl>
+   <DockPanel Grid.Column="1" Margin="8">
+    <TextBlock DockPanel.Dock="Top" Text="LOOK-AROUND PREVIEW" FontWeight="Bold" FontSize="17"/>
+    <StackPanel DockPanel.Dock="Bottom"><CheckBox x:Name="Play" Content="Move the sky / pattern" IsChecked="True"/><TextBlock Text="Move these sliders to look into the window from another side."/><DockPanel><TextBlock Text="Left / right" Width="90"/><Slider x:Name="LookYaw" Minimum="-70" Maximum="70" Value="0"/></DockPanel><DockPanel><TextBlock Text="Up / down" Width="90"/><Slider x:Name="LookPitch" Minimum="-40" Maximum="40" Value="0"/></DockPanel><TextBlock Text="This is a flat test window, not your 3D avatar. Check it in Unity before uploading. Bright stars need world bloom for a halo. These are depth illusions, not a real room inside the object." Foreground="#AFC0D8"/></StackPanel>
+    <Border Background="#202838" BorderBrush="#52647F" BorderThickness="1" CornerRadius="7" Padding="6"><Grid><TextBlock x:Name="EmptyPreview" Text="Your space window will appear here. Try Show me an example, or start with step 1." VerticalAlignment="Center" HorizontalAlignment="Center" Margin="25"/><Image x:Name="Preview" Stretch="Uniform"/></Grid></Border>
+   </DockPanel>
+  </Grid>
+ </DockPanel>
+</UserControl>
